@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>investigadora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #b86fc5, #d1c4e9); /* Fondo morado pastel */
+            color: #f0f0f0; /* Color de texto un poco menos blanco */
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #d834a1; /* Color dorado para el título */
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para hacer que destaque */
+        }
+        p {
+            font-size: 1.2em;
+            margin: 20px 0;
+            line-height: 1.5;
+            position: relative;
+            padding-left: 40px; /* Espacio para los iconos */
+        }
+        p::before {
+            content: '\f005'; /* Icono de estrella */
+            font-family: 'Font Awesome 5 Free'; /* Iconos de Font Awesome */
+            font-weight: 900;
+            position: absolute;
+            left: 10px;
+            color: #6ff7a8; /* Color del icono */
+            font-size: 1.5em;
+        }
+        canvas {
+            border: 2px solid #6c757d; /* Borde del canvas */
+            background-color: #f3e5f5; /* Color de fondo del canvas */
+            margin-top: 30px;
+            border-radius: 15px; /* Bordes curvos */
+            display: block;
+            max-width: 100%; /* Asegurarse de que el canvas no exceda el ancho de la pantalla */
+            height: auto; /* Altura automática para mantener la relación de aspecto */
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #f0f0f0; /* Color de texto del pie de página */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>La investigadora Danna Catalina Bautista Vargas</h1>
+    <p>
+        La investigadora Danna Catalina Bautista Vargas tiene un gran compromiso con la justicia, 
+        una capacidad analítica excepcional y un profundo conocimiento en técnicas de investigación 
+        criminal. Su formación técnica en criminalística la ha dotado de habilidades prácticas, 
+        una atención meticulosa al detalle y un fuerte sentido de ética profesional.
+    </p>
+
+    <p>
+        Como ingeniero de software, te hice esta pequeña paginita para que la veas de vez en 
+        cuando y te acuerdes que sí es enserio que le encantas a este muchacho.
+    </p>
+
+    <canvas id="rainCanvas"></canvas>
+
+    <footer>
+        <p>&copy; 2024 Cristian Moreno</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('rainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Ajustar el tamaño del canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.6; // Ajustar altura del canvas
+        }
+
+        // Arreglo para almacenar las figuras
+        const shapes = [];
+
+        // Clase para las figuras
+        class Shape {
+            constructor(x, y, size, type, color) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.type = type;
+                this.speed = Math.random() * 2 + 1;
+                this.color = color; // Color fijo para cada figura
+            }
+            draw() {
+                ctx.fillStyle = this.color; // Usar color fijo
+                if (this.type === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.type === 'square') {
+                    ctx.fillRect(this.x, this.y, this.size, this.size);
+                } else if (this.type === 'heart') {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.bezierCurveTo(this.x - this.size / 2, this.y - this.size / 2, this.x - this.size / 2, this.y + this.size / 2, this.x, this.y + this.size);
+                    ctx.bezierCurveTo(this.x + this.size / 2, this.y + this.size / 2, this.x + this.size / 2, this.y - this.size / 2, this.x, this.y);
+                    ctx.fill();
+                }
+            }
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height) {
+                    this.y = 0;
+                    this.x = Math.random() * canvas.width;
+                }
+                this.draw();
+            }
+        }
+
+        // Generar figuras al azar
+        function createShapes() {
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 20 + 10; // Tamaño variable
+                const type = Math.random() < 0.5 ? 'circle' : (Math.random() < 0.5 ? 'square' : 'heart');
+                const color = type === 'heart' ? '#ff69b4' : '#87ceeb'; // Rosa para corazones y azul pastel para otros
+                shapes.push(new Shape(x, y, size, type, color));
+            }
+        }
+
+        // Animar el canvas
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(shape => shape.update());
+            requestAnimationFrame(animate);
+        }
+
+        // Inicializar el canvas
+        window.addEventListener('resize', resizeCanvas); // Ajustar canvas al cambiar el tamaño de la ventana
+        resizeCanvas(); // Llamar a la función al cargar
+        createShapes();
+        animate();
+    </script>
+
+</body>
+</html>
